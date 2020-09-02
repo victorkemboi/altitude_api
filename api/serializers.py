@@ -38,7 +38,6 @@ class AuthTokenSerializer(serializers.Serializer):
         attrs['user'] = user
         return attrs
 
-
 class RegistrationSerializer(serializers.Serializer):
     name = serializers.CharField()
     email = serializers.EmailField()
@@ -51,7 +50,20 @@ class MagazinesSerializer(serializers.Serializer):
     get_by = serializers.CharField(default=None, allow_blank=True)
     by_value = serializers.CharField(default=None, allow_blank=True)
     newest = serializers.CharField(default=None, allow_blank=True)
+
 class AddFavouriteSerializer(serializers.Serializer):
     user_id = serializers.CharField()
     magazine_id = serializers.CharField()
     like_status = serializers.BooleanField(default=False)
+
+class SubscriptionSerializer(serializers.Serializer):
+    magazine_id = serializers.CharField()
+    user_id = serializers.CharField()
+    subscription_type = serializers.CharField()
+    Amount = serializers.FloatField()
+    subscription_date = serializers.DateField()
+    expiration_date = serializers.DateField()
+    payment_status = serializers.CharField()
+    transaction_id = serializers.BooleanField()
+    transaction_type = serializers.CharField()
+    currency = serializers.CharField()

@@ -159,7 +159,7 @@ class MagazinesView(APIView):
         
         return Response(magazine, status=status.HTTP_404_NOT_FOUND)
 
-class FavouritesView(APIView):
+class FavouriteMagazinesView(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     def post(self, request):
         serializer = AddFavouriteSerializer(data=request.data)
@@ -172,7 +172,7 @@ class FavouritesView(APIView):
             magazine__magazine_id = magazine_id_ )
             favourite_mag_record.liked = like_status_
             favourite_mag_record.save()
-                    return Response(favourite_mag_record.to_json())
+            return Response(favourite_mag_record.to_json())
         except ObjectDoesNotExist:
             try:
                 customer  = Customer.objects.get(customer_id=user_id_)
@@ -205,8 +205,73 @@ class FavouritesView(APIView):
                 favourite_magazines_json.append(
                     favourite_magazine.magazine.to_json()
                 )
+        return Response(favourite_magazines_json)
+
+
+class SubscriptionView(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def post(self, request):
+        serializer = SubscriptionSerializer(data=request.data)
+        user_id_ = serializer.validated_data['user_id']
+        magazine_id_ = serializer.validated_data['magazine_id']
+        subscription_type_ = serializer.validated_data['subscription_type']
+        Amount_ = serializer.validated_data['Amount']
+        subscription_date_ = serializer.validated_data['subscription_date']
+        expiration_date_ = serializer.validated_data['expiration_date']
+        payment_status_ = serializer.validated_data['payment_status']
+        transaction_id_ = serializer.validated_data['transaction_id']
+        transaction_type_ = serializer.validated_data['transaction_type']
+        currency_ = serializer.validated_data['currency']
+
+        customer = None
         try:
-            magazine = Magazine.objects.get(magazine_id=magazine_id)
-            return Response(magazine.to_json())
+            customer = Customer.objects.get(customer_id=user_id_)
         except ObjectDoesNotExist:
             pass
+        
+        magazine = None
+        try:
+            magazine = Magazine.objects.get(magazine_id=magazine_id_)
+        except ObjectDoesNotExist:
+            pass
+        
+        if customer and magazine:
+            subscription = Subscription.objects.create(
+                magazine = magazine, 
+                customer = customer,
+                subscription_type = subscription_type_,
+                amount = amount_,
+                subscription_date = subscription_date_,
+                expiration_date = expiration_date_,
+                payment_status = payment_status_
+            )
+
+            subscription.save()
+
+            payment = Payment.objects.create(
+                subscription = subscription,
+                customer = customer,
+                amount = amount_,
+                transaction_id = transaction_id_,
+                transaction_type = transaction_type_,
+                currency = currency_
+            )
+            payment.save()
+    def get(self, request):
+        customer_id = request.query_params['user_id']
+        customer =None
+        try:
+            customer = Customer.objects.get(customer_id=customer_id)
+        except ObjectDoesNotExist:
+            pass
+        subscriptions_json = []
+        if customer:
+            subscriptions = Subscription.objects.filter(
+                customer = customer
+            )
+            for subscription in subscriptions:
+                subscriptions_json.append(
+                    subscription.magazine.to_json()
+                )
+        return Response(subscriptions_json)
