@@ -1,17 +1,23 @@
-from django.contrib.auth import authenticate
+#from django.contrib.auth import authenticate
 from rest_framework import serializers
 from django.utils.translation import ugettext_lazy as _
+from core.backends import EmailBackend
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'email')
 
 class AuthTokenSerializer(serializers.Serializer):
-    username = serializers.CharField(label=_("Username"))
+    email = serializers.CharField(label=_("email"))
     password = serializers.CharField(label=_("Password"), style={'input_type': 'password'})
 
     def validate(self, attrs):
-        username = attrs.get('username')
+        email = attrs.get('email')
         password = attrs.get('password')
 
         if username and password:
-            user = authenticate(username=username, password=password)
+            user = EmailBackend.authenticate(username=email, password=password)
             if user:
                 if not user.is_active:
                     msg = _('User account is disabled.')
@@ -25,3 +31,12 @@ class AuthTokenSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+
+
+class RegistrationSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+    device_id = serializers.CharField()
+    device_type = serializers.CharField()
+    mobile_number = serializers.CharField()

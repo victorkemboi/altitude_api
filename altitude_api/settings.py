@@ -115,7 +115,7 @@ REST_FRAMEWORK = {
     )
 }
 
-AUTHENTICATION_BACKENDS = ['core.views.auth.EmailBackend']
+AUTHENTICATION_BACKENDS = ['core.backends.EmailBackend']
 
 
 # Internationalization

@@ -1,5 +1,4 @@
 from django.db import models
-
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
@@ -13,11 +12,13 @@ class BaseModel(models.Model):
         abstract = True
 
 class Device(models.Model):
-    device_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    device_uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    device_id = models.CharField(max_length=60)
     device_type = models.CharField(max_length=60)
 
     def to_json(self):
         return {
+            'device_uuid':self.device_uuid,
             'device_id':self.device_id,
             'device_type':self.device_type
         }
@@ -27,26 +28,26 @@ class Device(models.Model):
 
 class Customer(BaseModel):
     customer_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150)
     mobile_number = models.CharField(max_length=20)
     email = models.EmailField()
-    userType = models.CharField(max_length=60)
-    userStatus = models.CharField(max_length=60)
-    otp = models.CharField(max_length=60)
+    userType = models.CharField(max_length=60, null=True)
+    userStatus = models.CharField(max_length=60, null=True)
+    otp = models.CharField(max_length=60, null=True)
+    device = models.ForeignKey(Device,  on_delete=models.DO_NOTHING)
     user = models.ForeignKey(User,  on_delete=models.CASCADE)
 
     def to_json(self):
         return{
             'customer_id':self.customer_id,
-            'first_name':self.first_name,
-            'last_name':self.last_name,
+            'name':self.name,
             'mobile_number':self.mobile_number,
             'email':self.email,
             'userType':self.userType,
             'userStatus':self.userStatus,
             'otp':self.otp,
-            'user':self.user.id
+            'device_id': self.device.device_id
+            'user_id':self.user.id
             
         }
 
