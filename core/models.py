@@ -1,8 +1,6 @@
 from django.db import models
-from django.db import models
 from django.contrib.auth.models import User
 import uuid
-# Create your models here.
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -46,13 +44,13 @@ class Customer(BaseModel):
             'userType':self.userType,
             'userStatus':self.userStatus,
             'otp':self.otp,
-            'device_id': self.device.device_id
+            'device_id': self.device.device_id,
             'user_id':self.user.id
             
         }
 
     def __str__(self):
-        return self.first_name + ' ' + self.last_name
+        return self.name 
 
 class Alliance(BaseModel):
     alliance_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -127,6 +125,7 @@ class Magazine(BaseModel):
     geographic_region = models.CharField(max_length=60)
     category = models.ForeignKey(Category,  on_delete=models.DO_NOTHING)
     sub_category = models.ForeignKey(SubCategory,  on_delete=models.DO_NOTHING)
+    airline = models.ForeignKey(Airline,default=uuid.uuid4,  on_delete=models.DO_NOTHING)
 
     def to_json(self):
         return{
@@ -136,6 +135,7 @@ class Magazine(BaseModel):
             'geographic_region':self.geographic_region,
             'category_id':self.category.category_id,
             'sub_category_id':self.sub_category.sub_category_id,
+            'airline_id': self.airline.airline_id
         }
 
     def __str__(self):
