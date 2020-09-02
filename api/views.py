@@ -275,3 +275,74 @@ class SubscriptionView(APIView):
                     subscription.magazine.to_json()
                 )
         return Response(subscriptions_json)
+
+class IssueProgressView(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    def post(self, request):
+        serializer = IssueProgressSerializer(data=request.data)
+        issue_id_ = serializer.validated_data['issue_id']
+        user_id_ = serializer.validated_data['user_id']
+        current_progress_ = serializer.validated_data['current_progress']
+        max_progress_ = serializer.validated_data['max_progress']
+        is_downloaded_ = serializer.validated_data['is_downloaded']
+
+        customer = None
+        try:
+            customer = Customer.objects.get(customer_id=user_id_)
+        except ObjectDoesNotExist:
+            pass
+        issue = None
+        try:
+            issue = Issue.objects.get(issue_id=issue_id)
+        except ObjectDoesNotExist:
+            pass
+
+        if customer and issue:
+            try:
+                issue_progress = IssueProgress.objects.get(
+                    customer = customer,
+                    issue = issue
+                )
+                issue_progress.current_progress = current_progress_
+                issue_progress.is_downloaded = is_downloaded_
+                issue_progress.save()
+                return Response(issue_progress.to_json())
+            except ObjectDoesNotExist:
+                issue_progress = IssueProgress.objects.create(
+                    issue = issue,
+                    customer = customer,
+                    current_progress = current_progress_,
+                    max_progress = max_progress_,
+                    is_downloaded = is_downloaded_
+                )
+                issue_progress.save()
+                return Response(issue_progress.to_json())
+        return Response(None, status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request):
+        customer_id = request.query_params['user_id']
+        issue_id = request.query_params['issue_id']
+
+        customer =None
+        try:
+            customer = Customer.objects.get(customer_id=customer_id)
+        except ObjectDoesNotExist:
+            pass
+
+        issue =None
+        try:
+            issue = Issue.objects.get(issue_id=issue_id)
+        except ObjectDoesNotExist:
+            pass
+        
+        if customer and issue:
+            try:
+                issue_progress = Issue.objects.get(
+                    customer = customer,
+                    issue = issue
+                )
+                return Response(issue_progress.to_json())
+            except ObjectDoesNotExist:
+                pass
+
+        return Response(None, status=status.HTTP_404_NOT_FOUND)

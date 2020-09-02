@@ -190,7 +190,7 @@ class Subscription(BaseModel):
     def __str__(self):
         return self.subscription_type
 
-class IssueView(BaseModel):
+class IssueProgress(BaseModel):
     issue_view_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     issue = models.ForeignKey(Issue,  on_delete=models.DO_NOTHING)
     customer = models.ForeignKey(Customer,  on_delete=models.DO_NOTHING)

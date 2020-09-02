@@ -67,3 +67,10 @@ class SubscriptionSerializer(serializers.Serializer):
     transaction_id = serializers.BooleanField()
     transaction_type = serializers.CharField()
     currency = serializers.CharField()
+
+class IssueProgressSerializer(serializers.Serializer):
+    issue_id = serializers.CharField()
+    user_id = serializers.CharField()
+    current_progress = serializers.CharField()
+    max_progress = serializers.CharField()
+    is_downloaded = serializers.CharField()

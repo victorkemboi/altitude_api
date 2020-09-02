@@ -12,6 +12,6 @@ urlpatterns = [
     path('magazines', views.MagazinesView.as_view(),name='Magazines'),
     path('favourites', views.FavouriteMagazinesView.as_view(), name='Favourites'),
     path('subscriptions', views.SubscriptionView.as_view(), name='Subscriptions'),
-
+    path('issue_progress', views.IssueProgressView.as_view(), name='IssueProgress'),
 
 ]
