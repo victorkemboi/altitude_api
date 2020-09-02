@@ -115,6 +115,8 @@ REST_FRAMEWORK = {
     )
 }
 
+AUTHENTICATION_BACKENDS = ['core.views.auth.EmailBackend']
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
