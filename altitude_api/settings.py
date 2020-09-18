@@ -25,7 +25,7 @@ SECRET_KEY = 'n6td3xa2wl@-*)3f3-s%*fhf^xitos#*934e@2dk(hf@*hiaka'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['api-altitude.herokuapp.com']
 
 
 # Application definition
