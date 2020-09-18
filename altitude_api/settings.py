@@ -25,7 +25,7 @@ SECRET_KEY = 'n6td3xa2wl@-*)3f3-s%*fhf^xitos#*934e@2dk(hf@*hiaka'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['api-altitude.herokuapp.com']
+ALLOWED_HOSTS = ['api-altitude.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -136,13 +136,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_files')
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_files')
 STATIC_URL = '/static/'
 
 
 # Extra lookup directories for collectstatic to find static files
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
 )
 
 #  Add configuration for static files storage using whitenoise
