@@ -91,7 +91,7 @@ ENV/
 .ropeproject
 
 .idea/
-#*.sqlite3
+*.sqlite3
 .idea/workspace.xml
 .idea/vcs.xml
 .idea/misc.xml
