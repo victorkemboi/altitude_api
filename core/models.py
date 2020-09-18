@@ -126,6 +126,7 @@ class Magazine(BaseModel):
     category = models.ForeignKey(Category,  on_delete=models.DO_NOTHING)
     sub_category = models.ForeignKey(SubCategory,  on_delete=models.DO_NOTHING)
     airline = models.ForeignKey(Airline,default=uuid.uuid4,  on_delete=models.DO_NOTHING)
+    icon =  models.CharField(max_length=200, null=True)
 
     def to_json(self):
         return{
@@ -135,7 +136,8 @@ class Magazine(BaseModel):
             'geographic_region':self.geographic_region,
             'category_id':self.category.category_id,
             'sub_category_id':self.sub_category.sub_category_id,
-            'airline_id': self.airline.airline_id
+            'airline_id': self.airline.airline_id,
+            'icon': self.icon
         }
 
     def __str__(self):
@@ -146,7 +148,7 @@ class Issue(BaseModel):
     title = models.CharField(max_length=60)
     magazine = models.ForeignKey(Magazine,  on_delete=models.DO_NOTHING)
     issue_period = models.CharField(max_length=60)
-    cover_image_link = models.CharField(max_length=120)
+    cover_image_link = models.CharField(max_length=200)
     pdf_file_link = models.CharField(max_length=120)
 
     def to_json(self):
