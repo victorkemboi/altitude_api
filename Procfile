@@ -1,1 +1,1 @@
-web: gunicorn mes.wsgi:application --log-file -
+web: gunicorn altitude_api.wsgi:application --log-file -
