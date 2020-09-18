@@ -23,7 +23,8 @@ class AuthTokenSerializer(serializers.Serializer):
         password = attrs.get('password')
 
         if email and password:
-            user = EmailBackend.authenticate(self,username=email, password=password)
+            backend = EmailBackend()
+            user = backend.authenticate(username=email, password=password)
             if user:
                 if not user.is_active:
                     msg = _('User account is disabled.')
