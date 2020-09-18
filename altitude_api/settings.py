@@ -80,8 +80,17 @@ WSGI_APPLICATION = 'altitude_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': 'altitude_db',
+
+        'USER': 'root',
+
+        'PASSWORD': '1234',
+
+        'HOST': 'localhost',
+
+        'PORT': '',
     }
 }
 
@@ -148,3 +157,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static_files')]
 
 #  Add configuration for static files storage using whitenoise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+import dj_database_url; 
+prod_db  =  dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(prod_db)
