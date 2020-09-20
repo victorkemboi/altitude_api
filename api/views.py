@@ -119,10 +119,10 @@ class MagazinesView(APIView):
     permission_classes = ''
 
     def post(self, request):
+        print("Maga Req: ", request.data)
         serializer = MagazinesSerializer(data=request.data)
-        get_by_ = serializer.validated_data['get_by']
-        by_value_ = serializer.validated_data['by_value']
-        newest_ = serializer.validated_data['newest']
+        get_by = serializer.validated_data['get_by']
+        by_value = serializer.validated_data['by_value']
         magazines_json = []
         #check if filter value set
         if by_value:
@@ -141,10 +141,11 @@ class MagazinesView(APIView):
                     for magazine in magazines:
                        magazines_json.append(magazine.to_json()) 
                 
-                else:
-                    pass
+                
         else:
             magazines = Magazine.objects.all()
+            for magazine in magazines:
+              magazines_json.append(magazine.to_json())  
 
         return Response(magazines_json)
 
