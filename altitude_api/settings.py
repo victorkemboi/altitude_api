@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'n6td3xa2wl@-*)3f3-s%*fhf^xitos#*934e@2dk(hf@*hiaka'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['api-altitude.herokuapp.com', '127.0.0.1']
 
