@@ -119,33 +119,33 @@ class MagazinesView(APIView):
     permission_classes = ''
 
     def post(self, request):
-        print("Maga Req: ", request.data)
         serializer = MagazinesSerializer(data=request.data)
-        get_by = serializer.validated_data['get_by']
-        by_value = serializer.validated_data['by_value']
-        magazines_json = []
-        #check if filter value set
-        if by_value:
-            #check filter_value group
-            if get_by:
-                if get_by == "geographic_region":
-                    magazines = Magazine.objects.filter(geographic_region=by_value)
-                    for magazine in magazines:
-                       magazines_json.append(magazine.to_json()) 
-                elif get_by == "airline":
-                    magazines = Magazine.objects.filter(airline__airline_id=by_value)
-                    for magazine in magazines:
-                       magazines_json.append(magazine.to_json()) 
-                elif get_by == "alliance":
-                    magazines = Magazine.objects.filter(airline__alliance__alliance_id=by_value)
-                    for magazine in magazines:
-                       magazines_json.append(magazine.to_json()) 
-                
-                
-        else:
-            magazines = Magazine.objects.all()
-            for magazine in magazines:
-              magazines_json.append(magazine.to_json())  
+        if serializer.is_valid():
+            get_by = serializer.validated_data['get_by']
+            by_value = serializer.validated_data['by_value']
+            magazines_json = []
+            #check if filter value set
+            if by_value:
+                #check filter_value group
+                if get_by:
+                    if get_by == "geographic_region":
+                        magazines = Magazine.objects.filter(geographic_region=by_value)
+                        for magazine in magazines:
+                            magazines_json.append(magazine.to_json()) 
+                    elif get_by == "airline":
+                        magazines = Magazine.objects.filter(airline__airline_id=by_value)
+                        for magazine in magazines:
+                            magazines_json.append(magazine.to_json()) 
+                    elif get_by == "alliance":
+                        magazines = Magazine.objects.filter(airline__alliance__alliance_id=by_value)
+                        for magazine in magazines:
+                            magazines_json.append(magazine.to_json()) 
+                    
+                    
+            else:
+                magazines = Magazine.objects.all()
+                for magazine in magazines:
+                    magazines_json.append(magazine.to_json())  
 
         return Response(magazines_json)
 
