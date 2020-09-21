@@ -114,6 +114,17 @@ class AirlinesView(APIView):
             airlines_json.append(airline.to_json())
         return Response(airlines_json)
 
+class IssueView(APIView):
+    authentication_classes = ''
+    permission_classes = ''
+
+    def get(self, request):
+        issues = Issue.objects.all()
+        issues_json = []
+        for issue in issues:
+            issues_json.append(issue.to_json())
+        return Response(issues_json)
+
 class MagazinesView(APIView):
     authentication_classes = ''
     permission_classes = ''
@@ -207,7 +218,6 @@ class FavouriteMagazinesView(APIView):
                     favourite_magazine.magazine.to_json()
                 )
         return Response(favourite_magazines_json)
-
 
 class SubscriptionView(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
