@@ -44,13 +44,14 @@ class RegistrationView(APIView):
         resp ={}
         if serializer.is_valid():
             email_ = serializer.validated_data['email']
+            username_ = serializer.validated_data['name']
             try:
-                user = User.objects.get(username=email_)
+                user = User.objects.get(email=email_)
                 user_serializer = UserSerializer(data=user)
                 user_serializer.is_valid()
-                return Response(user_serializer.data)
+                return  Response(None, status=status.HTTP_404_NOT_FOUND) 
             except ObjectDoesNotExist:
-                user = User.objects.create_user(username=email_, email=email_)
+                user = User.objects.create_user(username=username_, email=email_)
                 user.set_password(serializer.validated_data['password'])
                 user.save()
 
@@ -78,8 +79,6 @@ class RegistrationView(APIView):
 
         return Response(resp)
 
-    def get(self, request):
-        pass
 
 class CategoriesView(APIView):
     authentication_classes = ''
